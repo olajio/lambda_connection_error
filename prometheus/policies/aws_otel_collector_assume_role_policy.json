@@ -1,0 +1,18 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::${account_id}:oidc-provider/${oidc_endpoint}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringEquals": {
+                    "${oidc_endpoint}:aud": "sts.amazonaws.com",
+                    "${oidc_endpoint}:sub": "system:serviceaccount:${namespace}:${aws_otel_collector_service_account_name}"
+                }
+            }
+        }
+    ]
+}

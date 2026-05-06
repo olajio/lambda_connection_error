@@ -1,0 +1,57 @@
+{
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid": "ECRAccess",
+        "Effect": "Allow",
+        "Action": [
+          "ecr:SetRepositoryPolicy",
+          "ecr:GetRepositoryPolicy",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+            "aps:ListRules",
+            "aps:UntagResource",
+            "aps:DescribeScraper",
+            "aps:TagResource",
+            "aps:GetDefaultScraperConfiguration",
+            "aps:ListAlertManagerAlerts",
+            "aps:ListTagsForResource",
+            "aps:GetLabels",
+            "aps:ListRuleGroupsNamespaces",
+            "aps:GetAlertManagerStatus",
+            "aps:GetAlertManagerSilence",
+            "aps:ListAlertManagerAlertGroups",
+            "aps:DescribeAlertManagerDefinition",
+            "aps:QueryMetrics",
+            "aps:DescribeRuleGroupsNamespace",
+            "aps:GetMetricMetadata",
+            "aps:DescribeWorkspace",
+            "aps:ListAlerts",
+            "aps:ListScrapers",
+            "aps:DescribeLoggingConfiguration",
+            "aps:ListAlertManagerSilences",
+            "aps:ListWorkspaces",
+            "aps:GetSeries",
+            "aps:ListAlertManagerReceivers"
+        ],
+        "Resource" : "${prometheus_workspace_arn}"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:CreateNetworkInterface",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeInstances",
+          "ec2:AttachNetworkInterface"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }

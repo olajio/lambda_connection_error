@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "Allow_Prometheus_Alarms",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "aps.amazonaws.com"
+        },
+        "Action": [
+          "sns:Publish",
+          "sns:GetTopicAttributes"
+        ],
+        "Resource": "${sns_topic_arn}",
+        "Condition": {
+          "ArnEquals": {
+            "aws:SourceArn": "${workspace_arn}"
+          },
+          "StringEquals": {
+            "AWS:SourceAccount": "${account_id}"
+          }
+        }
+      }
+  
+    ]
+  }
+  

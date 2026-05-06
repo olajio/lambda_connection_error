@@ -1,0 +1,35 @@
+{
+	"Statement": [
+		{
+			"Sid": "ECRAccess",
+			"Effect": "Allow",
+			"Action": [
+				"ecr:SetRepositoryPolicy",
+				"ecr:GetRepositoryPolicy",
+				"ecr:GetDownloadUrlForLayer",
+				"ecr:BatchGetImage"
+			],
+			"Resource": "*"
+		},
+		{
+			"Action": [
+				"secretsmanager:GetSecretValue",
+				"secretsmanager:DescribeSecret"
+			],
+			"Effect": "Allow",
+			"Resource": "arn:aws:secretsmanager:*:${account_id}:secret:elastic/prometheus/api_key*"
+		},
+		{
+			"Effect": "Allow",
+			"Action": [
+				"ec2:DescribeNetworkInterfaces",
+				"ec2:CreateNetworkInterface",
+				"ec2:DeleteNetworkInterface",
+				"ec2:DescribeInstances",
+				"ec2:AttachNetworkInterface"
+			],
+			"Resource": "*"
+		}
+	],
+	"Version": "2012-10-17"
+}

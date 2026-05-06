@@ -1,0 +1,41 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "owner",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${role_arn}"
+      },
+      "Action": [
+        "SNS:Publish",
+        "SNS:RemovePermission",
+        "SNS:SetTopicAttributes",
+        "SNS:DeleteTopic",
+        "SNS:ListSubscriptionsByTopic",
+        "SNS:GetTopicAttributes",
+        "SNS:Receive",
+        "SNS:AddPermission",
+        "SNS:Subscribe"
+      ],
+      "Resource": "${sns_topic_arn}"
+    },
+    {
+      "Sid": "subscibe",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": [
+        "SNS:Subscribe",
+        "SNS:Receive"
+      ],
+      "Resource": "${sns_topic_arn}",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceOwner": "${account_id}"
+        }
+      }
+    }
+  ]
+}

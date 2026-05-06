@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "${shd_managed_grafana_role_arn}",
+        "Service": [
+          "aps.amazonaws.com",
+          "workspaces.amazonaws.com"
+        ]
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
