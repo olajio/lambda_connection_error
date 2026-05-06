@@ -1,0 +1,72 @@
+# This AWS SAM template has been generated from your function's configuration.
+# If your function has one or more triggers, note that the AWS resources
+# associated with these triggers aren't fully specified in this template and
+# include placeholder values. Open this template in AWS Infrastructure Composer
+# or your favorite IDE and modify it to specify a serverless application with
+# other AWS resources.
+#
+# - SAM automatically generates permissions to interact with the resources
+#   defined in this template. If your function needs additional permissions, add
+#   Policies to the AWS::Serverless::Function resource.
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: An AWS Serverless Application Model (SAM) template describing your function.
+Resources:
+  apptstinfrauseast2monprometheusalertlambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - x86_64
+      Description: ''
+      Environment:
+        Variables:
+          ELK_INDEX: mt-alerts
+          ELK_SECRET_NAME: elastic/prometheus/api_key
+          CLOUD_ACCOUNT_NAME: hedgeserv-app-tst
+          CLOUD_ACCOUNT_REGION: us-east-2
+          CLOUD_ACCOUNT_ID: '818366959089'
+          NOTIFY_EMAILS: monalytics_services@hedgeserv.com
+      EphemeralStorage:
+        Size: 512
+      ImageConfig:
+        Command:
+          - prometheus_alert_lambda.lambda_handler
+        WorkingDirectory: ''
+      ImageUri: >-
+        469620122115.dkr.ecr.us-east-2.amazonaws.com/core-shd-ci-us-east-2-ecr-monitoring:1.17.2
+      LoggingConfig:
+        LogFormat: Text
+        LogGroup: /aws/lambda/app-tst-infra-us-east-2-mon-prometheus_alert_lambda
+      MemorySize: 128
+      PackageType: Image
+      RecursiveLoop: Terminate
+      SnapStart:
+        ApplyOn: None
+      Tags:
+        Env: tst
+        Name: app-tst-infra-us-east-2-mon-prometheus_alert_lambda
+        Region: us-east-2
+        hs:std:app-code: PROM
+        hs:std:app-name: Prometheus_alerting
+        hs:std:description: prometheus alerting lambda
+        hs:std:svc-operator: ITSMA
+        hs:std:svc-software-owner: ITSMA
+      Timeout: 10
+      Tracing: PassThrough
+      VpcConfig:
+        Ipv6AllowedForDualStack: false
+        SecurityGroupIds:
+          - sg-0bf784c5ebd554c79
+        SubnetIds:
+          - subnet-04c5d545be69a164e
+          - subnet-05ee6588caa8f737a
+          - subnet-09ca0a5bcfb4ae58c
+      Events:
+        Trigger1Event:
+          Type: SNS
+          Properties:
+            Topic: !Ref Trigger1
+  Trigger1:
+    Type: AWS::SNS::Topic
+    Properties:
+      KmsMasterKeyId: alias/aws/sns
