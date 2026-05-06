@@ -1,0 +1,15 @@
+boto3==1.40.61
+regex
+pygithub
+cryptography
+requests
+pyyaml
+pytz
+botocore
+python-consul
+pyyaml
+requests_aws4auth
+elasticsearch==8.11.0
+urllib3<2
+hs-common-utilities==2.82.0
+python_dynamodb_lock
