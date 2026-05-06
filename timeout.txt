@@ -1,0 +1,4 @@
+[ERROR] Exception: ('Error: ', 'Connection timed out')
+Traceback (most recent call last):
+  File "/app/prometheus_alert_lambda.py", line 153, in lambda_handler
+    raise Exception('Error: ', error)
