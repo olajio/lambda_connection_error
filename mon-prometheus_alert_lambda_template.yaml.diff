@@ -1,0 +1,11 @@
+--- a/mon-prometheus_alert_lambda_template.yaml
++++ b/mon-prometheus_alert_lambda_template.yaml
+@@ -50,7 +50,7 @@ Resources:
+         hs:std:description: prometheus alerting lambda
+         hs:std:svc-operator: ITSMA
+         hs:std:svc-software-owner: ITSMA
+-      Timeout: 10
++      Timeout: 60
+       Tracing: PassThrough
+       VpcConfig:
+         Ipv6AllowedForDualStack: false

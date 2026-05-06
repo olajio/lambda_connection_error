@@ -1,0 +1,66 @@
+--- a/hs_aws_monitoring/prometheus_alert_lambda.py
++++ b/hs_aws_monitoring/prometheus_alert_lambda.py
+@@ -76,7 +76,14 @@ def get_secret_value(key, secret):
+ def get_es_client(elk_host, api_key):
+     print('Setting Elastic client!')
+     try:
+-        es = elasticsearch.Elasticsearch(elk_host, api_key=api_key, timeout=60, verify_certs=False, ssl_show_warn=False)
++        es = elasticsearch.Elasticsearch(
++            elk_host,
++            api_key=api_key,
++            request_timeout=30,
++            max_retries=3,
++            retry_on_timeout=True,
++            verify_certs=False,
++            ssl_show_warn=False,
++        )
+         local_cache['es'] = es
+         return es
+     except elasticsearch.AuthenticationException as e:
+@@ -228,7 +235,13 @@ def ingest_logs(alerts):
+     print('Ingesting alert events in Elastic...')
+     try:
+         es = local_cache.get('es')
+-        result = elasticsearch.helpers.bulk(es, gendata(alerts), request_timeout=8)
++        result = elasticsearch.helpers.bulk(
++            es,
++            gendata(alerts),
++            request_timeout=30,
++            max_retries=3,
++            initial_backoff=2,
++            max_backoff=10,
++        )
+         return result, None
+     except Exception as e:
+         print(f"Elastic Exception: {e}")
+--- a/prometheus/prometheus_alerts.tf
++++ b/prometheus/prometheus_alerts.tf
+@@ -55,7 +55,7 @@ resource "aws_lambda_function" "prometheus_alert_lambda" {
+   function_name    = "${local.naming_prefix}-mon-prometheus_alert_lambda"
+   package_type     = "Image"
+   role             = aws_iam_role.prometheus_alert_lambda_role.arn
+-  timeout          = 10
++  timeout          = 60
+ 
+   image_config {
+     command = ["prometheus_alert_lambda.lambda_handler"]
+@@ -154,7 +154,7 @@ resource "aws_lambda_function" "prometheus_alert_lambda_virginia" {
+   function_name    = "${local.naming_prefix_virginia}-mon-prometheus_alert_lambda"
+   package_type     = "Image"
+   role             = aws_iam_role.prometheus_alert_lambda_role.arn
+-  timeout          = 10
++  timeout          = 60
+ 
+   image_config {
+     command = ["prometheus_alert_lambda.lambda_handler"]
+--- a/mon-prometheus_alert_lambda_template.yaml
++++ b/mon-prometheus_alert_lambda_template.yaml
+@@ -50,7 +50,7 @@ Resources:
+         hs:std:description: prometheus alerting lambda
+         hs:std:svc-operator: ITSMA
+         hs:std:svc-software-owner: ITSMA
+-      Timeout: 10
++      Timeout: 60
+       Tracing: PassThrough
+       VpcConfig:
+         Ipv6AllowedForDualStack: false

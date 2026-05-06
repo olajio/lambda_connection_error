@@ -1,0 +1,35 @@
+--- a/hs_aws_monitoring/prometheus_alert_lambda.py
++++ b/hs_aws_monitoring/prometheus_alert_lambda.py
+@@ -76,7 +76,14 @@ def get_secret_value(key, secret):
+ def get_es_client(elk_host, api_key):
+     print('Setting Elastic client!')
+     try:
+-        es = elasticsearch.Elasticsearch(elk_host, api_key=api_key, timeout=60, verify_certs=False, ssl_show_warn=False)
++        es = elasticsearch.Elasticsearch(
++            elk_host,
++            api_key=api_key,
++            request_timeout=30,
++            max_retries=3,
++            retry_on_timeout=True,
++            verify_certs=False,
++            ssl_show_warn=False,
++        )
+         local_cache['es'] = es
+         return es
+     except elasticsearch.AuthenticationException as e:
+@@ -228,7 +235,13 @@ def ingest_logs(alerts):
+     print('Ingesting alert events in Elastic...')
+     try:
+         es = local_cache.get('es')
+-        result = elasticsearch.helpers.bulk(es, gendata(alerts), request_timeout=8)
++        result = elasticsearch.helpers.bulk(
++            es,
++            gendata(alerts),
++            request_timeout=30,
++            max_retries=3,
++            initial_backoff=2,
++            max_backoff=10,
++        )
+         return result, None
+     except Exception as e:
+         print(f"Elastic Exception: {e}")
